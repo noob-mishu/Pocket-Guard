@@ -1,11 +1,15 @@
-import React from "react";
+import React, { useId } from "react";
 import "./styles.css";
 
-function Input({ label, state, setState, placeholder,type }) {
+function Input({ label, state, setState, placeholder, type = "text" }) {
+  const id = useId();
   return (
     <div className="input-wrapper">
-      <p className="label-input">{label}</p>
+      <label className="label-input" htmlFor={id}>
+        {label}
+      </label>
       <input
+        id={id}
         type={type}
         value={state}
         placeholder={placeholder}

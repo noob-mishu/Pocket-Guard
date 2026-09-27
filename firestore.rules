@@ -1,0 +1,56 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+
+      match /transactions/{transactionId} {
+        allow read, write: if request.auth != null && request.auth.uid == uid;
+      }
+
+      match /budgets/{budgetId} {
+        allow read, write: if request.auth != null && request.auth.uid == uid;
+      }
+
+      match /receipts/{receiptId} {
+        allow read, write: if request.auth != null && request.auth.uid == uid;
+      }
+    }
+
+    match /groups/{groupId} {
+      function groupData() {
+        return get(/databases/$(database)/documents/groups/$(groupId)).data;
+      }
+      function isMember() {
+        return request.auth != null
+          && request.auth.token.email in groupData().memberEmails;
+      }
+      function isCreator() {
+        return request.auth != null
+          && groupData().createdBy == request.auth.token.email;
+      }
+
+      allow read: if request.auth != null
+        && (request.auth.token.email in resource.data.memberEmails
+            || resource.data.createdBy == request.auth.token.email);
+      allow create: if request.auth != null
+        && request.resource.data.memberEmails is list
+        && request.auth.token.email in request.resource.data.memberEmails;
+      allow update: if isCreator();
+      allow delete: if isCreator();
+
+      match /members/{memberId} {
+        allow read, write: if isMember();
+      }
+
+      match /expenses/{expenseId} {
+        allow read, write: if isMember();
+      }
+
+      match /settlements/{settlementId} {
+        allow read, write: if isMember();
+      }
+    }
+  }
+}

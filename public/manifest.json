@@ -1,6 +1,7 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Yo Wallet",
+  "name": "Yo Wallet - Your Personal Finance Tracker",
+  "description": "Expense tracker with budget goals, group split, SMS & receipt quick add, and offline sync.",
   "icons": [
     {
       "src": "favicon.ico",
@@ -19,7 +20,9 @@
     }
   ],
   "start_url": ".",
+  "scope": ".",
   "display": "standalone",
-  "theme_color": "#000000",
+  "orientation": "portrait",
+  "theme_color": "#2970ff",
   "background_color": "#ffffff"
 }

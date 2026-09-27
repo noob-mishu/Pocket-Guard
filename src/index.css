@@ -1,95 +1,420 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
-
 :root {
-  --theme: #2970ff;
-  --black: #000;
-  --white: #fff;
-  --shadow: 0px 0px 30px 8px rgba(227, 227, 227, 0.75);
+  --ink: #1B1712;
+  --paper: #F7F4EC;
+  --paper-deep: #F1EDE1;
+  --surface: #FFFFFF;
+  --magenta: #E2136E;
+  --magenta-deep: #B80E5A;
+  --teal: #0E6E5C;
+  --amber: #8A6508;
+  --red: #B3261E;
+  --line: #E6DFD0;
+  --muted: #6E6658;
+  --theme: var(--magenta);
+  --shadow-soft: 0 18px 44px -28px rgba(27, 23, 18, 0.45);
+  --radius: 12px;
+  --font-display: "Bricolage Grotesque", "Trebuchet MS", sans-serif;
+  --font-body: "Manrope", system-ui, -apple-system, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   margin: 0;
-  font-family: "Montserrat", sans-serif;
+  background-color: var(--paper);
+  background-image: radial-gradient(circle at 12% -10%, rgba(226, 19, 110, 0.05), transparent 42%);
+  font-family: var(--font-body);
+  color: var(--ink);
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-variant-numeric: tabular-nums;
 }
 
-input {
-  font-family: "Montserrat", sans-serif;
+input,
+select,
+textarea,
+button {
+  font-family: var(--font-body);
 }
 
-.custom-input {
-  border: 0px;
-  border-bottom: 1px solid #000;
-  padding: 0.5rem 0rem;
-  width: 100%;
-  border-radius: 0;
+::selection {
+  background: rgba(226, 19, 110, 0.18);
+  color: var(--ink);
 }
 
-.custom-input {
-  margin-top: -1rem !important;
+:focus-visible {
+  outline: 2px solid var(--magenta);
+  outline-offset: 2px;
+  border-radius: 2px;
 }
 
-.custom-input::placeholder {
-  color: rgba(0, 0, 0, 0.5);
+.money {
+  font-variant-numeric: tabular-nums;
 }
 
-.custom-input:focus {
-  outline: none;
-  opacity: 1;
-  transition: all 0.3s;
-}
-.input-flex {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 0.5rem;
-    width: 100%;
-    box-shadow: 0px 0px 30px 8px rgba(227, 227, 227, 0.75);
-    border-radius: 0.5rem;
-    padding: 0rem 0.5rem;
-}
+/* ---------- Buttons ---------- */
 
-.input-flex input {
-    width: 97%;
-    padding: 0.5rem;
-    border: 0;
-}
-
-.input-flex input:focus {
-    outline: none;
-}
-.select-input {
-  width: 30%;
-  margin-right: 10px;
-  display: flex;
+.btn {
+  display: inline-flex !important;
   align-items: center;
-  box-shadow: 0px 0px 8px 8px rgba(227, 227, 227, 0.75);
-  border-radius: 0.5rem !important;
-  padding: 0.2rem 0.5rem;
+  justify-content: center;
+  gap: 0.4rem;
+  height: auto !important;
+  padding: 0.5rem 1.1rem !important;
+  margin: 0 !important;
+  border: 1px solid var(--ink) !important;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+  font-weight: 600;
+  line-height: 1.4;
+  cursor: pointer;
+  transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease;
 }
 
-.select-input > div {
-  border: 0px solid #fff !important;
+.btn:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
 }
+
+.btn:disabled,
+.btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn:disabled:hover,
+.btn[disabled]:hover {
+  background: transparent;
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.btn-blue:disabled:hover,
+.btn-blue[disabled]:hover {
+  background: var(--magenta);
+  border-color: var(--magenta);
+  color: #fff;
+}
+
+.btn-blue,
+.ant-btn-primary.btn-blue {
+  border-color: var(--magenta) !important;
+  background: var(--magenta);
+  color: #fff;
+}
+
+.btn-blue:hover,
+.ant-btn-primary.btn-blue:hover {
+  background: var(--magenta-deep) !important;
+  border-color: var(--magenta-deep) !important;
+  color: #fff !important;
+}
+
+/* ---------- Inputs ---------- */
+
+.custom-input {
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  padding: 0.5rem 0.1rem !important;
+  min-height: 2.75rem;
+  width: 100%;
+  color: var(--ink);
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.custom-input:hover {
+  border-bottom-color: var(--muted) !important;
+}
+
+.custom-input:focus,
+.custom-input:focus-within {
+  border-bottom-color: var(--magenta) !important;
+  box-shadow: none !important;
+}
+
+.ant-input.custom-input::placeholder,
+.custom-input::placeholder {
+  color: var(--muted);
+  opacity: 1;
+}
+
+.ant-form-item-explain-error {
+  font-size: 0.8rem;
+}
+
+.label-input {
+  display: block;
+  text-transform: capitalize;
+  margin-bottom: 0.5rem;
+  font-size: 0.92rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+/* ---------- Search & quick-add bars ---------- */
 
 .input-flex {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
   width: 100%;
-  box-shadow: 0px 0px 30px 8px rgba(227, 227, 227, 0.75);
-  border-radius: 0.5rem;
-  padding: 0rem 0.5rem;
+  min-height: 2.75rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.45rem 0.9rem;
+  box-shadow: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-flex:focus-within {
+  border-color: var(--magenta);
+  box-shadow: 0 0 0 3px rgba(226, 19, 110, 0.12);
 }
 
 .input-flex input {
   width: 100%;
-  padding: 0.5rem;
+  padding: 0.3rem 0;
   border: 0;
+  background: transparent;
+  color: var(--ink);
+  font-size: 0.95rem;
+}
+
+.input-flex input::placeholder {
+  color: var(--muted);
 }
 
 .input-flex input:focus {
   outline: none;
+}
+
+.select-input,
+.select-input-2 {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px !important;
+  padding: 0.2rem 0.6rem;
+}
+
+.select-input .ant-select-selector,
+.select-input-2 .ant-select-selector {
+  border: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+/* ---------- Cards/panels ---------- */
+
+.my-card {
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--radius) !important;
+  box-shadow: var(--shadow-soft);
+}
+
+.my-card .ant-card-head {
+  border-bottom: 1px solid var(--line);
+}
+
+.my-card .ant-card-head-title {
+  margin: 0 !important;
+  font-weight: 700;
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+/* ---------- Transactions table (the thread) ---------- */
+
+.my-table {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem 1.5rem;
+  box-shadow: var(--shadow-soft);
+}
+
+.my-table h2 {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.my-table .ant-table {
+  background: transparent;
+}
+
+.my-table .ant-table-thead > tr > th {
+  background: transparent;
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 0.8rem;
+  border-bottom: 1px solid var(--line) !important;
+  padding-bottom: 0.65rem;
+}
+
+.my-table .ant-table-tbody > tr > td {
+  border-bottom: 1px solid var(--line);
+  padding: 0.8rem 0.5rem;
+}
+
+.my-table .ant-table-tbody > tr:last-child > td {
+  border-bottom: 0;
+}
+
+.my-table .ant-table-tbody > tr:hover > td {
+  background: #FBF8F1 !important;
+}
+
+.my-table .ant-pagination {
+  margin-top: 1rem;
+}
+
+.tx-name {
+  font-weight: 600;
+}
+
+.tx-meta {
+  color: var(--muted);
+  font-size: 0.75rem;
+  margin-top: 0.1rem;
+}
+
+.tx-amount {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.tx-amount--in {
+  color: var(--magenta);
+}
+
+.tx-amount--out {
+  color: var(--teal);
+}
+
+.tx-till {
+  color: var(--ink);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.tx-till .tx-till-label {
+  display: block;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  margin-bottom: 0.05rem;
+}
+
+.tx-receipt-empty {
+  color: var(--line);
+}
+
+/* ---------- antd nips ---------- */
+
+.ant-btn {
+  font-weight: 600;
+  border-radius: 8px;
+}
+
+.ant-modal-content {
+  border-radius: 14px;
+  padding: 1.5rem 1.75rem;
+}
+
+.ant-modal-header {
+  margin-bottom: 1rem;
+}
+
+.ant-modal-title {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  letter-spacing: -0.01em;
+}
+
+.ant-progress-inner {
+  background-color: var(--line) !important;
+}
+
+.ant-progress-bg {
+  background-color: var(--teal) !important;
+}
+
+.ant-progress-status-exception .ant-progress-bg {
+  background-color: var(--red) !important;
+}
+
+.ant-tag {
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.ant-alert-banner {
+  border-radius: 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.ant-radio-group.input-radio .ant-radio-button-wrapper {
+  border: 1px solid var(--line);
+  border-left-width: 1px;
+  background: transparent;
+  color: var(--muted);
+}
+
+.ant-radio-group.input-radio .ant-radio-button-wrapper:hover {
+  color: var(--ink);
+}
+
+.ant-radio-group.input-radio .ant-radio-button-wrapper-checked {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
+.ant-radio-group.input-radio .ant-radio-button-wrapper-checked:hover {
+  color: var(--paper);
+}
+
+.ant-empty-description {
+  color: var(--muted);
+}
+
+/* ---------- Page states ---------- */
+
+.page-note {
+  max-width: 36rem;
+  margin: 0;
+  padding: 4rem 1.5rem;
+  font-size: 1.05rem;
+  color: var(--muted);
+}
+
+/* ---------- Reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

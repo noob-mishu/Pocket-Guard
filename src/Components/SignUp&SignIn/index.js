@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./styles.css";
-import Input from "../Input"; 
+import Input from "../Input";
 import Button from "../Button";
 import { toast } from "react-toastify";
 import {
@@ -12,6 +12,7 @@ import { auth, db, provider } from "../../firebase";
 import { doc, getDoc, setDoc, Timestamp } from "firebase/firestore";
 import { GoogleAuthProvider } from "firebase/auth/web-extension";
 import { useNavigate } from "react-router-dom";
+import { getFirebaseErrorMessage } from "../../utils/firebaseErrors";
 
 function SignupSigninComponent() {
   const [name, setName] = useState("");
@@ -23,56 +24,57 @@ function SignupSigninComponent() {
 
   const navigate = useNavigate();
 
-  function signupWithEmail() {
-    setLoading(true);
-
+  async function signupWithEmail() {
     if (name && email && password && confirmPassword) {
       if (password === confirmPassword) {
-        createUserWithEmailAndPassword(auth, email, password)
-          .then((userCredential) => {
-            const user = userCredential.user;
-            toast.success("User Created!");
-            setLoading(false);
-            setName("");
-            setPassword("");
-            setEmail("");
-            setConfirmPassword("");
-            createDoc(user);
-            navigate("/dashboard");
-          })
-          .catch((error) => {
-            toast.error(error.message);
-            setLoading(false);
-          });
+        setLoading(true);
+        try {
+          const userCredential = await createUserWithEmailAndPassword(
+            auth,
+            email,
+            password
+          );
+          const user = userCredential.user;
+          toast.success("User Created!");
+          await createDoc(user);
+          setName("");
+          setPassword("");
+          setEmail("");
+          setConfirmPassword("");
+          navigate("/dashboard");
+        } catch (error) {
+          toast.error(getFirebaseErrorMessage(error));
+        } finally {
+          setLoading(false);
+        }
       } else {
         toast.error("Password and Confirm Password don't match!");
+      }
+    } else {
+      toast.error("All fields are mandatory!");
+    }
+  }
+
+  async function loginUsingEmail() {
+    if (email && password) {
+      setLoading(true);
+      try {
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        const user = userCredential.user;
+        toast.success("Login Successful!");
+        await createDoc(user);
+        navigate("/dashboard");
+      } catch (error) {
+        toast.error(getFirebaseErrorMessage(error));
+      } finally {
         setLoading(false);
       }
     } else {
       toast.error("All fields are mandatory!");
-      setLoading(false);
-    }
-  }
-
-  function loginUsingEmail() {
-    setLoading(true);
-
-    if (email && password) {
-      signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          const user = userCredential.user;
-          toast.success("Login Successful!");
-          createDoc(user);
-          setLoading(false);
-          navigate("/dashboard");
-        })
-        .catch((error) => {
-          toast.error(error.message);
-          setLoading(false);
-        });
-    } else {
-      toast.error("All fields are mandatory!");
-      setLoading(false);
     }
   }
 
@@ -83,41 +85,31 @@ function SignupSigninComponent() {
     const userData = await getDoc(userRef);
 
     if (!userData.exists()) {
-      try {
-        await setDoc(userRef, {
-          name: user.displayName || name,
-          email: user.email,
-          photoURL: user.photoURL || "",
-          createdAt: Timestamp.now(), // Fixed the issue
-        });
-
-        toast.success("Document created successfully!");
-      } catch (e) {
-        toast.error(e.message);
-      } finally {
-        setLoading(false);
-      }
+      await setDoc(userRef, {
+        name: user.displayName || name,
+        email: user.email,
+        photoURL: user.photoURL || "",
+        createdAt: Timestamp.now(),
+      });
+      toast.success("Document created successfully!");
     } else {
       toast.info("User already exists!");
-      setLoading(false);
     }
   }
 
-  function googleAuth() {
+  async function googleAuth() {
     setLoading(true);
-
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        const user = result.user;
-        toast.success("Google Authentication Successful!");
-        createDoc(user);
-        setLoading(false);
-        navigate("/dashboard");
-      })
-      .catch((error) => {
-        toast.error(error.message);
-        setLoading(false);
-      });
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      toast.success("Google Authentication Successful!");
+      await createDoc(user);
+      navigate("/dashboard");
+    } catch (error) {
+      toast.error(getFirebaseErrorMessage(error));
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -125,7 +117,7 @@ function SignupSigninComponent() {
       {loginForm ? (
         <div className="signup-wrapper">
           <h2 className="title">
-            Login on<span style={{ color: "var(--theme)" }}> Pocket-Guard</span>
+            Log in to<span style={{ color: "var(--theme)" }}> Yo Wallet</span>
           </h2>
           <form>
             <Input
@@ -145,29 +137,31 @@ function SignupSigninComponent() {
 
             <Button
               disabled={loading}
-              text={loading ? "Loading..." : "Login Using Email And Password"}
+              text={loading ? "Loading..." : "Log in with email"}
               onClick={loginUsingEmail}
             />
 
             <Button
               onClick={googleAuth}
-              text={loading ? "Loading..." : "Login Using Google"}
+              disabled={loading}
+              text={loading ? "Loading..." : "Log in with Google"}
               blue={true}
             />
 
-            <p
+            <button
+              type="button"
               className="p-login"
-              style={{ cursor: "pointer" }}
               onClick={() => setloginForm(!loginForm)}
             >
-              Don't Have An Account? Click Here
-            </p>
+              New here? Create an account
+            </button>
           </form>
         </div>
       ) : (
         <div className="signup-wrapper">
           <h2 className="title">
-            Sign Up on <span style={{ color: "var(--theme)" }}>Pocket-Guard.</span>
+            Create your
+            <span style={{ color: "var(--theme)" }}> Yo Wallet</span> account
           </h2>
           <form>
             <Input
@@ -200,23 +194,24 @@ function SignupSigninComponent() {
 
             <Button
               disabled={loading}
-              text={loading ? "Loading..." : "Sign Up Using Email And Password"}
+              text={loading ? "Loading..." : "Create account with email"}
               onClick={signupWithEmail}
             />
 
             <Button
               onClick={googleAuth}
-              text={loading ? "Loading..." : "Sign Up Using Google"}
+              disabled={loading}
+              text={loading ? "Loading..." : "Sign up with Google"}
               blue={true}
             />
 
-            <p
+            <button
+              type="button"
               className="p-login"
-              style={{ cursor: "pointer" }}
               onClick={() => setloginForm(!loginForm)}
             >
-              Have An Account? Click Here
-            </p>
+              Already have an account? Log in
+            </button>
           </form>
         </div>
       )}

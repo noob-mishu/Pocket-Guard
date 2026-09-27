@@ -1,24 +1,140 @@
-.my-card {
-box-shadow: var(--shadow);
-margin: 1rem;
-border-radius: 0.5rem;
-min-width: 400px;
-flex: 1;
+.till-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 2rem 0.5rem;
 }
 
-.ant-card-head-title {
-margin: 0rem !important;
-font-weight: 600;
-}
-.my-row {
-display: flex;
-justify-content: space-between;
-align-items: center;
-margin: 2rem auto;
-flex-wrap: wrap;
-gap:"16px";
+.till-main {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
-.my-card p {
-margin: 0;
+.till-label {
+  margin: 0 0 0.15rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.till-figure {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.6rem, 6vw, 4.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.till-mark {
+  color: var(--magenta);
+  font-size: 0.65em;
+  margin-right: 0.08em;
+  vertical-align: 0.14em;
+}
+
+.till-reset {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  margin-top: 0.4rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-bottom: 1px solid transparent;
+}
+
+.till-reset:hover {
+  color: var(--magenta-deep);
+  border-bottom-color: var(--magenta-deep);
+}
+
+.till-stats {
+  display: flex;
+  align-items: stretch;
+  gap: 1.4rem;
+  padding: 0 2rem;
+}
+
+.till-stat {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.2rem;
+  min-width: 8.5rem;
+  padding-left: 1.4rem;
+  border-left: 1px solid var(--line);
+}
+
+.till-stat span {
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.till-stat strong {
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.till-stat--in strong {
+  color: var(--magenta);
+}
+
+.till-stat--out strong {
+  color: var(--teal);
+}
+
+.till-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding-left: 1.5rem;
+}
+
+.till-btn {
+  min-height: 2.75rem;
+  white-space: nowrap;
+}
+
+@media (max-width: 940px) {
+  .till-wrap {
+    flex-direction: column;
+    gap: 1.4rem;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+
+  .till-stats {
+    padding: 0 0 0 0.25rem;
+    justify-content: flex-start;
+  }
+
+  .till-actions {
+    padding-left: 0;
+  }
+
+  .till-stat {
+    padding-left: 1rem;
+    min-width: 7.5rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .till-stats {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .till-stat {
+    border-left: 0;
+    padding-left: 0;
+  }
 }

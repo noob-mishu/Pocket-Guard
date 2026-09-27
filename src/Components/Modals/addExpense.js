@@ -1,16 +1,32 @@
-import React from "react";
-import {Button,Modal,Form,Input,DatePicker,Select} from "antd";
+import React, { useEffect } from "react";
+import { Button, Modal, Form, Input, DatePicker, Select } from "antd";
+import dayjs from "../../utils/dayjs";
+import { EXPENSE_TAGS } from "../../utils/tags";
+
 function AddExpenseModal({
   isExpenseModalVisible,
   handleExpenseCancel,
   onFinish,
+  prefill,
 }) {
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    if (prefill && isExpenseModalVisible) {
+      form.setFieldsValue({
+        name: prefill.name,
+        amount: prefill.amount,
+        date: prefill.date ? dayjs(prefill.date, "YYYY-MM-DD") : dayjs(),
+        tag: prefill.tag,
+      });
+    }
+  }, [prefill, isExpenseModalVisible, form]);
+
   return (
     <Modal
       style={{ fontWeight: 600 }}
       title="Add Expense"
-      visible={isExpenseModalVisible}
+      open={isExpenseModalVisible}
       onCancel={handleExpenseCancel}
       footer={null}
     >
@@ -62,10 +78,11 @@ function AddExpenseModal({
           rules={[{ required: true, message: "Please select a tag!" }]}
         >
           <Select className="select-input-2">
-            <Select.Option value="food">Food</Select.Option>
-            <Select.Option value="education">Education</Select.Option>
-            <Select.Option value="office">Office</Select.Option>
-            {/* Add more tags here */}
+            {EXPENSE_TAGS.map((tag) => (
+              <Select.Option key={tag.value} value={tag.value}>
+                {tag.label}
+              </Select.Option>
+            ))}
           </Select>
         </Form.Item>
         <Form.Item>

@@ -1,15 +1,16 @@
 import React from "react";
 import "./styles.css";
 
-function Button({ text, onClick, blue, disabled }) {
+function Button({ text, onClick, blue, disabled, type = "button" }) {
   return (
-    <div 
-    className={blue ? "btn btn-blue" : "btn"} 
-    onClick={onClick}
-    disabled={disabled}
+    <button
+      type={type}
+      className={blue ? "btn btn-blue" : "btn"}
+      onClick={onClick}
+      disabled={disabled}
     >
       {text}
-    </div>
+    </button>
   );
 }
 

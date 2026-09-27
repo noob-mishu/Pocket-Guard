@@ -1,27 +1,32 @@
-import React from "react";
-import {
-  Card,
-  Col,
-  Row,
-  Button,
-  Modal,
-  Form,
-  Input,
-  DatePicker,
-  Select,
-} from "antd";
+import React, { useEffect } from "react";
+import { Button, Modal, Form, Input, DatePicker, Select } from "antd";
+import dayjs from "../../utils/dayjs";
+import { INCOME_TAGS } from "../../utils/tags";
 
 function AddIncomeModal({
   isIncomeModalVisible,
   handleIncomeCancel,
   onFinish,
+  prefill,
 }) {
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    if (prefill && isIncomeModalVisible) {
+      form.setFieldsValue({
+        name: prefill.name,
+        amount: prefill.amount,
+        date: prefill.date ? dayjs(prefill.date, "YYYY-MM-DD") : dayjs(),
+        tag: prefill.tag,
+      });
+    }
+  }, [prefill, isIncomeModalVisible, form]);
+
   return (
     <Modal
       style={{ fontWeight: 600 }}
       title="Add Income"
-      visible={isIncomeModalVisible}
+      open={isIncomeModalVisible}
       onCancel={handleIncomeCancel}
       footer={null}
     >
@@ -73,10 +78,11 @@ function AddIncomeModal({
           rules={[{ required: true, message: "Please select a tag!" }]}
         >
           <Select className="select-input-2">
-            <Select.Option value="salary">Salary</Select.Option>
-            <Select.Option value="freelance">Freelance</Select.Option>
-            <Select.Option value="investment">Investment</Select.Option>
-            {/* Add more tags here */}
+            {INCOME_TAGS.map((tag) => (
+              <Select.Option key={tag.value} value={tag.value}>
+                {tag.label}
+              </Select.Option>
+            ))}
           </Select>
         </Form.Item>
         <Form.Item>
