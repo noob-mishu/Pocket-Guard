@@ -1,3 +1,10 @@
+/**
+ * Calculate income, expenses, and current balance from a list of transactions.
+ *
+ * @param {Array<{type: string, amount: number}>} [transactions=[]] - Transaction list; type should be "income" or "expense".
+ * @returns {{income: number, expenses: number, currentBalance: number}} Totals with balance = income - expenses.
+ *          Unrecognized types are ignored with a warning.
+ */
 export default function calculateBalance(transactions = []) {
   let income = 0;
   let expenses = 0;
