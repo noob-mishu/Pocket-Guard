@@ -1,6 +1,8 @@
 import dayjs from "./dayjs";
 import { EXPENSE_TAGS } from "./tags";
 
+const DATE_FORMAT = "YYYY-MM-DD";
+
 const CATEGORY_PATTERNS = [
   { value: "food", regex: /\bfood|lunch|dinner|eat|restaurant|grocery\b/i },
   { value: "transport", regex: /\btransport|uber|pathao|bus|fuel|petrol|travel\b/i },
@@ -12,35 +14,35 @@ const CATEGORY_PATTERNS = [
 
 export function parseRange(text) {
   if (/\btoday\b/.test(text)) {
-    return { from: dayjs().format("YYYY-MM-DD"), to: dayjs().format("YYYY-MM-DD") };
+    return { from: dayjs().format(DATE_FORMAT), to: dayjs().format(DATE_FORMAT) };
   }
   if (/\byesterday\b/.test(text)) {
-    const from = dayjs().subtract(1, "day").format("YYYY-MM-DD");
+    const from = dayjs().subtract(1, "day").format(DATE_FORMAT);
     return { from, to: from };
   }
   if (/\blast week\b/.test(text)) {
     const from = dayjs().subtract(1, "week").startOf("week");
     const to = dayjs().subtract(1, "week").endOf("week");
-    return { from: from.format("YYYY-MM-DD"), to: to.format("YYYY-MM-DD") };
+    return { from: from.format(DATE_FORMAT), to: to.format(DATE_FORMAT) };
   }
   if (/\bthis week\b|\bweek\b/.test(text)) {
     const from = dayjs().startOf("week");
     const to = dayjs().endOf("week");
-    return { from: from.format("YYYY-MM-DD"), to: to.format("YYYY-MM-DD") };
+    return { from: from.format(DATE_FORMAT), to: to.format(DATE_FORMAT) };
   }
   if (/\blast month\b/.test(text)) {
     const from = dayjs().subtract(1, "month").startOf("month");
     const to = dayjs().subtract(1, "month").endOf("month");
-    return { from: from.format("YYYY-MM-DD"), to: to.format("YYYY-MM-DD") };
+    return { from: from.format(DATE_FORMAT), to: to.format(DATE_FORMAT) };
   }
   if (/\bthis year\b/.test(text)) {
     const from = dayjs().startOf("year");
     const to = dayjs().endOf("year");
-    return { from: from.format("YYYY-MM-DD"), to: to.format("YYYY-MM-DD") };
+    return { from: from.format(DATE_FORMAT), to: to.format(DATE_FORMAT) };
   }
   const from = dayjs().startOf("month");
   const to = dayjs().endOf("month");
-  return { from: from.format("YYYY-MM-DD"), to: to.format("YYYY-MM-DD") };
+  return { from: from.format(DATE_FORMAT), to: to.format(DATE_FORMAT) };
 }
 
 function detectCategories(text) {
