@@ -42,7 +42,6 @@ function GroupDetail() {
 
   const myEmail = user && user.email;
   const members = (group && group.memberEmails) || [];
-  const signedUpMembers = members.filter((m) => m !== myEmail);
 
   async function fetchData() {
     const groupDoc = await getDoc(doc(db, "groups", groupId));
